@@ -1,0 +1,63 @@
+datasource db {
+  provider = "sqlite"
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  passwordHash  String
+  role          String    @default("MEMBER") // ADMIN or MEMBER
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  assignedLeads Lead[]
+  notes         LeadNote[]
+  activities    ActivityLog[]
+}
+
+model Lead {
+  id            String    @id @default(cuid())
+  name          String
+  email         String
+  phone         String?
+  company       String?
+  status        String    @default("NEW") // NEW, CONTACTED, QUALIFIED, PROPOSAL_SENT, WON, LOST
+  value         Float?
+  assignedToId  String?
+  source        String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  assignedTo    User?     @relation(fields: [assignedToId], references: [id])
+  notes         LeadNote[]
+  activities    ActivityLog[]
+}
+
+model LeadNote {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  leadId    String
+  authorId  String
+
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  author    User     @relation(fields: [authorId], references: [id])
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  action    String
+  details   String?  // JSON string or text
+  createdAt DateTime @default(now())
+  leadId    String
+  actorId   String?
+
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  actor     User?    @relation(fields: [actorId], references: [id])
+}
