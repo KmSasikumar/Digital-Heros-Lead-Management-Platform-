@@ -43,10 +43,15 @@ export default async function LeadDetailsPage({
     redirect("/dashboard"); // Unauthorized for this lead
   }
 
-  // Also fetch users for assignment dropdown (only for admins, but let's pass all members to client)
-  const users = await prisma.user.findMany({
-    select: { id: true, name: true, email: true, role: true },
-  });
+  // The user list (names + emails of every account) is only needed by
+  // admins for assignment. Fetching it for MEMBERs shipped the whole
+  // directory to any signed-in member in the page payload.
+  const users =
+    session.user.role === "ADMIN"
+      ? await prisma.user.findMany({
+          select: { id: true, name: true, email: true, role: true },
+        })
+      : [];
 
   return (
     <LeadDetailsClient 
