@@ -17,11 +17,11 @@ async function main() {
   await prisma.lead.deleteMany()
   await prisma.user.deleteMany()
 
-  const adminPasswordHash = await bcrypt.hash('12345678', 10)
+  const adminPasswordHash = await bcrypt.hash('Admin@12345', 10)
   const admin = await prisma.user.create({
     data: {
-      name: 'Kommamani',
-      email: 'kommamani012@gmail.com',
+      name: 'Admin User',
+      email: 'admin@digitalheroes.demo',
       passwordHash: adminPasswordHash,
       role: 'ADMIN',
     },
