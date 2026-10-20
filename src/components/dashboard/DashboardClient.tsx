@@ -3,7 +3,16 @@
 import { useState } from "react";
 import Link from "next/link";
 
-type Lead = any; // We'll refine this later
+type Lead = {
+  id: string;
+  name: string;
+  email: string;
+  company: string | null;
+  status: string;
+  createdAt: string | Date;
+  // User.name is nullable in the Prisma schema — rendering must tolerate it.
+  assignedTo: { id: string; name: string | null; email: string } | null;
+};
 
 export default function DashboardClient({ 
   initialLeads, 
@@ -65,10 +74,10 @@ export default function DashboardClient({
                   <td className="p-6 align-middle">
                     <div className="flex items-center">
                       <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary mr-2">
-                        {lead.assignedTo ? lead.assignedTo.name.charAt(0) : "?"}
+                        {lead.assignedTo ? (lead.assignedTo.name?.charAt(0) ?? lead.assignedTo.email.charAt(0)) : "?"}
                       </div>
                       <span className="text-sm font-medium">
-                        {lead.assignedTo ? lead.assignedTo.name : "Unassigned"}
+                        {lead.assignedTo ? lead.assignedTo.name || lead.assignedTo.email : "Unassigned"}
                       </span>
                     </div>
                   </td>
