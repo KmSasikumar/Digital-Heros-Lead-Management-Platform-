@@ -12,13 +12,24 @@ export async function GET(req: NextRequest) {
     }
 
     const { searchParams } = new URL(req.url);
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "10");
+    // Validate pagination: non-numeric or out-of-range values fall back to
+    // safe defaults instead of producing NaN/negative Prisma arguments.
+    const rawPage = parseInt(searchParams.get("page") || "1", 10);
+    const page = Number.isFinite(rawPage) && rawPage >= 1 ? rawPage : 1;
+    const rawLimit = parseInt(searchParams.get("limit") || "10", 10);
+    const limit =
+      Number.isFinite(rawLimit) && rawLimit >= 1 ? Math.min(rawLimit, 100) : 10;
     const skip = (page - 1) * limit;
 
     const status = searchParams.get("status");
     const search = searchParams.get("search");
-    const sortBy = searchParams.get("sortBy") || "createdAt";
+    // Whitelist sortable fields: an arbitrary sortBy used to reach Prisma
+    // unchecked and crash the endpoint with a 500.
+    const SORTABLE_FIELDS = ["createdAt", "updatedAt", "name", "email", "status", "value"] as const;
+    const requestedSort = searchParams.get("sortBy") || "createdAt";
+    const sortBy = (SORTABLE_FIELDS as readonly string[]).includes(requestedSort)
+      ? requestedSort
+      : "createdAt";
     const sortOrder = searchParams.get("sortOrder") === "asc" ? "asc" : "desc";
 
     // Build the where clause
