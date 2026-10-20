@@ -2,6 +2,7 @@ import { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { prisma } from "@/lib/prisma"
 import bcrypt from "bcryptjs"
+import { randomUUID } from "crypto"
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -61,5 +62,10 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt"
   },
-  secret: process.env.NEXTAUTH_SECRET || "fallback_secret_for_development",
+  // Never fall back to a known, published secret: anyone could forge
+  // session tokens with it. Production must provide NEXTAUTH_SECRET
+  // (NextAuth itself refuses requests without one); local development
+  // gets a random per-process secret instead.
+  secret: process.env.NEXTAUTH_SECRET ??
+    (process.env.NODE_ENV === "production" ? undefined : randomUUID()),
 }

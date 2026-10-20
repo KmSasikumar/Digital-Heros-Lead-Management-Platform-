@@ -30,18 +30,25 @@ A production-ready Lead Management System built with Next.js, Prisma, and NextAu
 npm install
 ```
 
-2. Push the schema to the SQLite database:
+2. Create a `.env` file with the database URL and an auth secret (generate one with `openssl rand -base64 32`):
+```bash
+DATABASE_URL="file:./dev.db"
+NEXTAUTH_SECRET="<your-random-secret>"
+NEXTAUTH_URL="http://localhost:3000"
+```
+
+3. Push the schema to the SQLite database:
 ```bash
 npx prisma db push
 ```
 
-3. Seed the database with demo data:
+4. Seed the database with demo data:
 ```bash
 npx prisma db seed
 ```
 *Note: This creates two demo users: `admin@digitalheroes.demo` (password: `Admin@12345`) and `member@digitalheroes.demo` (password: `Member@12345`).*
 
-4. Run the development server:
+5. Run the development server:
 ```bash
 npm run dev
 ```
