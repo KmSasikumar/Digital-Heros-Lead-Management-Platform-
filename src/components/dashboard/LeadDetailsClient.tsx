@@ -4,13 +4,41 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Save, CheckCircle2 } from "lucide-react";
 
-export default function LeadDetailsClient({ 
+type UserSummary = { id: string; name: string | null; email: string; role?: string };
+type LeadNoteT = {
+  id: string;
+  content: string;
+  createdAt: string | Date;
+  author: UserSummary;
+};
+type ActivityT = {
+  id: string;
+  action: string;
+  details: string | null;
+  createdAt: string | Date;
+  actor: UserSummary | null;
+};
+type LeadDetail = {
+  id: string;
+  name: string;
+  email: string;
+  company: string | null;
+  phone: string | null;
+  source: string | null;
+  value: number | null;
+  status: string;
+  assignedTo: UserSummary | null;
+  notes: LeadNoteT[];
+  activities: ActivityT[];
+};
+
+export default function LeadDetailsClient({
   initialLead,
   users,
   userRole
-}: { 
-  initialLead: any;
-  users: any[];
+}: {
+  initialLead: LeadDetail;
+  users: UserSummary[];
   userRole: string;
 }) {
   const [lead, setLead] = useState(initialLead);
@@ -138,7 +166,7 @@ export default function LeadDetailsClient({
             </button>
           </form>
           <div className="space-y-4">
-            {lead.notes.map((note: any) => (
+            {lead.notes.map((note) => (
               <div key={note.id} className="rounded-xl border bg-white/50 p-5 shadow-sm hover:shadow-md transition-shadow">
                 <div className="mb-3 flex items-center justify-between">
                   <div className="flex items-center">
@@ -224,7 +252,7 @@ export default function LeadDetailsClient({
             <h3 className="text-xl font-bold leading-none tracking-tight font-heading">Activity Log</h3>
           </div>
           <div className="space-y-5 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
-            {lead.activities.map((activity: any, index: number) => (
+            {lead.activities.map((activity, index) => (
               <div key={activity.id} className="relative pl-6 pb-2">
                 {/* Vertical line connecting timeline dots */}
                 {index !== lead.activities.length - 1 && (

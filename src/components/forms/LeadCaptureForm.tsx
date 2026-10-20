@@ -68,7 +68,7 @@ export default function LeadCaptureForm() {
       <div className="flex flex-col space-y-2 mb-6">
         <h3 className="text-2xl font-semibold leading-none tracking-tight font-heading">Get in touch</h3>
         <p className="text-sm text-muted-foreground">
-          Fill out the form below and we'll contact you shortly.
+          Fill out the form below and we&apos;ll contact you shortly.
         </p>
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

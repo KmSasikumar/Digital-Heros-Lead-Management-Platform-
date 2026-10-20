@@ -1,11 +1,13 @@
 "use client";
 
+import type { Session } from "next-auth";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LogIn } from "lucide-react";
 import LogoutButton from "./LogoutButton";
 
-export default function HeaderNav({ session }: { session: any }) {
+export default function HeaderNav({ session }: { session: Session | null }) {
   const pathname = usePathname();
 
   return (
