@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
     await prisma.activityLog.create({
       data: {
         leadId: lead.id,
-        action: "STATUS_CHANGE",
+        action: "CREATED",
         details: "Lead captured via public form",
       },
     });
