@@ -4,13 +4,15 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { z } from "zod";
 
+const LEAD_STATUSES = ["NEW", "CONTACTED", "QUALIFIED", "PROPOSAL_SENT", "WON", "LOST"] as const;
+
 const updateLeadSchema = z.object({
-  name: z.string().optional(),
+  name: z.string().trim().min(1, "Name cannot be empty").optional(),
   email: z.string().email().optional(),
   phone: z.string().optional().nullable(),
   company: z.string().optional().nullable(),
-  status: z.string().optional(),
-  value: z.number().optional().nullable(),
+  status: z.enum(LEAD_STATUSES).optional(),
+  value: z.number().nonnegative("Value cannot be negative").optional().nullable(),
   assignedToId: z.string().optional().nullable(),
 });
 
@@ -94,6 +96,31 @@ export async function PATCH(
 
     const data = parsedData.data;
 
+    // Assignment is an admin action (see README RBAC): a MEMBER who owns the
+    // lead may edit it, but may not move it to a different assignee.
+    if (
+      session.user.role === "MEMBER" &&
+      data.assignedToId !== undefined &&
+      data.assignedToId !== lead.assignedToId
+    ) {
+      return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+    }
+
+    // A non-null assignee must reference a real user, otherwise Prisma
+    // throws a foreign-key error and the endpoint 500s.
+    if (data.assignedToId) {
+      const assignee = await prisma.user.findUnique({
+        where: { id: data.assignedToId },
+        select: { id: true },
+      });
+      if (!assignee) {
+        return NextResponse.json(
+          { message: "Validation error", errors: { assignedToId: ["Assignee not found"] } },
+          { status: 400 }
+        );
+      }
+    }
+
     // Determine what changed for activity log
     const changes: string[] = [];
     if (data.status && data.status !== lead.status) changes.push(`Status changed from ${lead.status} to ${data.status}`);
@@ -128,11 +155,18 @@ export async function DELETE(
 ) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session || !session.user || session.user.role !== "ADMIN") {
+    if (!session || !session.user) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+    if (session.user.role !== "ADMIN") {
       return NextResponse.json({ message: "Forbidden" }, { status: 403 });
     }
 
     const { id } = await context.params;
+    const lead = await prisma.lead.findUnique({ where: { id }, select: { id: true } });
+    if (!lead) {
+      return NextResponse.json({ message: "Lead not found" }, { status: 404 });
+    }
     await prisma.lead.delete({ where: { id } });
 
     return NextResponse.json({ message: "Lead deleted successfully" });
