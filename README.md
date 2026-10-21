@@ -2,6 +2,32 @@
 
 A production-ready Lead Management System built with Next.js, Prisma, and NextAuth.js, designed for the Digital Heroes Technical Assessment.
 
+## Live Demo
+
+**Deployed:** https://lead-management.antideploy.app (Antideploy)
+
+Demo accounts (seeded data):
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Admin | `admin@digitalheroes.demo` | `Admin@12345` |
+| Member | `member@digitalheroes.demo` | `Member@12345` |
+
+How it runs: Antideploy builds the Next.js app into a container and serves it over
+HTTPS. `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, and `DATABASE_URL` are provided as platform
+environment variables (never committed to this repo). The database is the seeded
+SQLite file (`prod.db`, created with `prisma db push` + `prisma/seed.ts`).
+
+Limits: Antideploy's filesystem is ephemeral — SQLite data (including leads added
+through the demo) is reset whenever the app is redeployed, and the platform does
+not yet provision SQLite. A redeploy restores the seeded demo dataset. For durable
+data, point `DATABASE_URL` at a hosted database and swap the Prisma datasource
+accordingly.
+
+An older Vercel deployment (lead-management-virid.vercel.app) is **not** working:
+its environment was never given `NEXTAUTH_SECRET`, and its SQLite writes have no
+persistent storage there. The Antideploy deployment above is the live one.
+
 ## Features
 - **Public Capture Form**: Submit leads directly to the system (landing page).
 - **Role-Based Access Control (RBAC)**: Supports `ADMIN` and `MEMBER` roles. 
