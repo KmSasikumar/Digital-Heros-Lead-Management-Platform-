@@ -23,7 +23,7 @@ export default function LoginPage() {
           >
             <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
           </svg>
-          LeadGen Platform
+          Lead Management Platform
         </div>
 
         <div className="relative z-20 mt-auto mb-auto flex flex-col items-start justify-center h-full max-w-md">
@@ -37,7 +37,7 @@ export default function LoginPage() {
         </div>
         
         <div className="relative z-20 mt-auto text-sm text-white/40 flex items-center justify-between">
-          <span>&copy; {new Date().getFullYear()} LeadGen Inc.</span>
+          <span>&copy; {new Date().getFullYear()} K. Sasikumar Yadav</span>
           <span className="uppercase tracking-widest text-xs">Internal Access</span>
         </div>
       </div>

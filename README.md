@@ -1,6 +1,6 @@
 # Lead Management Platform
 
-A production-ready Lead Management System built with Next.js, Prisma, and NextAuth.js, designed for the Digital Heroes Technical Assessment.
+A production-ready Lead Management System built with Next.js, Prisma, and NextAuth.js. A personal project by K. Sasikumar Yadav — capture, assign, and track sales leads with role-based access control.
 
 ## Live Demo
 
@@ -10,8 +10,8 @@ Demo accounts (seeded data):
 
 | Role | Email | Password |
 | --- | --- | --- |
-| Admin | `admin@digitalheroes.demo` | `Admin@12345` |
-| Member | `member@digitalheroes.demo` | `Member@12345` |
+| Admin | `admin@leadmanager.demo` | `Admin@12345` |
+| Member | `member@leadmanager.demo` | `Member@12345` |
 
 How it runs: Antideploy builds the Next.js app into a container and serves it over
 HTTPS. `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, and `DATABASE_URL` are provided as platform
@@ -72,7 +72,7 @@ npx prisma db push
 ```bash
 npx prisma db seed
 ```
-*Note: This creates two demo users: `admin@digitalheroes.demo` (password: `Admin@12345`) and `member@digitalheroes.demo` (password: `Member@12345`).*
+*Note: This creates two demo users: `admin@leadmanager.demo` (password: `Admin@12345`) and `member@leadmanager.demo` (password: `Member@12345`).*
 
 5. Run the development server:
 ```bash

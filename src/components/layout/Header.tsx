@@ -15,7 +15,7 @@ export default async function Header() {
           <Link href="/" className="flex items-center space-x-2">
             <Briefcase className="h-6 w-6 text-primary" />
             <span className="inline-block font-heading font-bold text-xl tracking-tight text-primary">
-              Digital Heroes LeadGen
+              Lead Management Platform
             </span>
           </Link>
         </div>

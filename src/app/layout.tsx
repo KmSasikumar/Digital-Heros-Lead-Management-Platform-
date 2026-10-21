@@ -16,8 +16,8 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Digital Heroes LeadGen",
-  description: "A production-ready Lead Management System built for the Digital Heroes Technical Assessment.",
+  title: "Lead Management Platform",
+  description: "Lead Management Platform — a personal project by K. Sasikumar Yadav. Capture, assign, and track leads with role-based access control.",
 };
 
 export default function RootLayout({
